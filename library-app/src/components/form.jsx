@@ -97,7 +97,7 @@ const Form = ({ saveBook, books, index, isEditing }) => {
                         </div>
                         <label className="form-label">Book Category</label>
                         <select className="form-select mb-3" id="bookCategory" onChange={handleInputChange} value={formData.bookCategory}>
-                            <option value="" disabled>Pilih Kategori Buku</option>
+                            <option value="" disabled>Choose Book Category</option>
                             <option value="Comic">Comic</option>
                             <option value="Novel">Novel</option>
                             <option value="Biography">Biography</option>
