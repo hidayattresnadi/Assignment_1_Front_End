@@ -1,6 +1,7 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
-const Form = ({ saveBook, books, index, isEditing }) => {
+const Form = ({ addBook, updateBook, editingBook, categories }) => {
+    const titleInputRef = useRef(null);
     const [formData, setFormData] = useState({
         id: '',
         title: '',
@@ -11,15 +12,14 @@ const Form = ({ saveBook, books, index, isEditing }) => {
     });
 
     useEffect(() => {
-        if (index !== null) {
-            const book = books[index];
+        if (editingBook) {
             setFormData({
-                id: book.id,
-                title: book.title,
-                author: book.author,
-                bookCategory: book.bookCategory,
-                publicationYear: book.publicationYear,
-                isbn: book.isbn
+                id: editingBook.id,
+                title: editingBook.title,
+                author: editingBook.author,
+                bookCategory: editingBook.bookCategory,
+                publicationYear: editingBook.publicationYear,
+                isbn: editingBook.isbn
             });
         }
         else {
@@ -32,7 +32,10 @@ const Form = ({ saveBook, books, index, isEditing }) => {
                 isbn: ''
             });
         }
-    }, [index, books]);
+        if (titleInputRef.current) {
+            titleInputRef.current.focus();
+        }
+    }, [editingBook]);
 
     const handleInputChange = (e) => {
         const { id, value } = e.target;
@@ -45,15 +48,12 @@ const Form = ({ saveBook, books, index, isEditing }) => {
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        if (!isEditing) {
-            const duplicateBooks = books.filter(book => book.id == formData.id);
-            if (duplicateBooks.length > 0) {
-                alert('ID already exists. Please enter a unique ID.');
-                return;
-            }
+        if (editingBook) {
+            updateBook(formData)
         }
-
-        saveBook(formData);
+        else {
+            addBook(formData)
+        }
 
         setFormData({
             id: '',
@@ -63,44 +63,44 @@ const Form = ({ saveBook, books, index, isEditing }) => {
             publicationYear: '',
             isbn: ''
         });
-        alert(isEditing ? 'Book updated successfully!' : 'Book added successfully!');
-        isEditing = false;
     };
     return (
         <div className="min-vh-100 d-flex flex-column align-items-center" style={{ marginTop: '80px' }}>
             <div className="card" style={{ width: "90%", maxWidth: "600px" }}>
                 <div className="card-header bg-dark text-white text-center">
-                    <h1 className="mb-0">{isEditing ? 'Form to Update Book' : 'Form to Add Book'}</h1>
+                    <h1 className="mb-0">{editingBook ? 'Form to Update Book' : 'Form to Add Book'}</h1>
                 </div>
                 <div className="card-body">
                     <form onSubmit={handleSubmit}>
                         <div className="mb-3">
                             <label htmlFor="id" className="form-label">Id</label>
-                            <input type="text" className="form-control" id="id" aria-describedby="idHelp" onChange={handleInputChange} value={formData.id} />
+                            <input type="text" required pattern="\d*" placeholder="Example: 4" className="form-control" id="id" aria-describedby="idHelp" onChange={handleInputChange} value={formData.id} />
                             <div id="idHelp" className="form-text">Please input Id with number</div>
                         </div>
                         <div className="mb-3">
                             <label htmlFor="title" className="form-label">Title</label>
-                            <input type="text" className="form-control" id="title" onChange={handleInputChange} value={formData.title} />
+                            <input type="text" required ref={titleInputRef} className="form-control" id="title" onChange={handleInputChange} value={formData.title} />
                         </div>
                         <div className="mb-3">
                             <label htmlFor="author" className="form-label">Author</label>
-                            <input type="text" className="form-control" id="author" onChange={handleInputChange} value={formData.author} />
+                            <input type="text" required className="form-control" id="author" onChange={handleInputChange} value={formData.author} />
                         </div>
                         <div className="mb-3">
                             <label htmlFor="publicationYear" className="form-label">Publication Year</label>
-                            <input type="text" className="form-control" id="publicationYear" onChange={handleInputChange} value={formData.publicationYear} />
+                            <input type="text" placeholder="Example: 2023" pattern="\d*" required className="form-control" id="publicationYear" onChange={handleInputChange} value={formData.publicationYear} />
                         </div>
                         <div className="mb-3">
                             <label htmlFor="isbn" className="form-label">ISBN</label>
-                            <input type="text" className="form-control" id="isbn" onChange={handleInputChange} value={formData.isbn} />
+                            <input type="text" required className="form-control" id="isbn" onChange={handleInputChange} value={formData.isbn} />
                         </div>
                         <label className="form-label">Book Category</label>
-                        <select className="form-select mb-3" id="bookCategory" onChange={handleInputChange} value={formData.bookCategory}>
+                        <select className="form-select mb-3" id="bookCategory" onChange={handleInputChange} required value={formData.bookCategory}>
                             <option value="" disabled>Choose Book Category</option>
-                            <option value="Comic">Comic</option>
-                            <option value="Novel">Novel</option>
-                            <option value="Biography">Biography</option>
+                            {categories.map((category, index) => (
+                                <option key={index} value={category.name}>
+                                    {category.name}
+                                </option>
+                            ))}
                         </select>
                         <button type="submit" className="btn btn-primary mt-3 w-100">Submit</button>
                     </form>

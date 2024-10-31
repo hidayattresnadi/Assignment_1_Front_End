@@ -1,4 +1,4 @@
-function Table({ books, onEditBook, onDeleteBook  }) {
+function Table({ books, onEdit, onDelete  }) {
     return (
         <>
             <div className="d-flex flex-column align-items-center">
@@ -25,8 +25,8 @@ function Table({ books, onEditBook, onDeleteBook  }) {
                                         <td>{book.bookCategory}</td>
                                         <td>{book.publicationYear}</td>
                                         <td>{book.isbn}</td>
-                                        <td><button onClick={() => onEditBook(index)} className="btn btn-primary"><i className="fas fa-pencil-alt"></i></button></td>
-                                        <td><button onClick={() => onDeleteBook(index)} className="btn btn-danger"> <i className="fas fa-trash-alt"></i></button></td>
+                                        <td><button onClick={() => onEdit(index)} className="btn btn-primary"><i className="fas fa-pencil-alt"></i></button></td>
+                                        <td><button onClick={() => onDelete(index)} className="btn btn-danger"> <i className="fas fa-trash-alt"></i></button></td>
                                     </tr>
                                 ))}
                             </tbody>
