@@ -3,7 +3,6 @@ import { useState, useEffect, useRef } from "react";
 const Form = ({ addBook, updateBook, editingBook, categories, isFormOpen, setIsFormOpen }) => {
     const titleInputRef = useRef(null);
     const [formData, setFormData] = useState({
-        id: '',
         title: '',
         author: '',
         bookCategory: '',
@@ -14,7 +13,6 @@ const Form = ({ addBook, updateBook, editingBook, categories, isFormOpen, setIsF
     useEffect(() => {
         if (editingBook) {
             setFormData({
-                id: editingBook.id,
                 title: editingBook.title,
                 author: editingBook.author,
                 bookCategory: editingBook.bookCategory,
@@ -24,7 +22,6 @@ const Form = ({ addBook, updateBook, editingBook, categories, isFormOpen, setIsF
         }
         else {
             setFormData({
-                id: '',
                 title: '',
                 author: '',
                 bookCategory: '',
@@ -59,7 +56,6 @@ const Form = ({ addBook, updateBook, editingBook, categories, isFormOpen, setIsF
         }
 
         setFormData({
-            id: '',
             title: '',
             author: '',
             bookCategory: '',
@@ -81,11 +77,6 @@ const Form = ({ addBook, updateBook, editingBook, categories, isFormOpen, setIsF
                 </div>
                 <div className="card-body">
                     <form onSubmit={handleSubmit}>
-                        <div className="mb-3">
-                            <label htmlFor="id" className="form-label">Id</label>
-                            <input type="text" required pattern="\d*" placeholder="Example: 4" className="form-control" id="id" aria-describedby="idHelp" onChange={handleInputChange} value={formData.id} />
-                            <div id="idHelp" className="form-text">Please input Id with number</div>
-                        </div>
                         <div className="mb-3">
                             <label htmlFor="title" className="form-label">Title</label>
                             <input type="text" required ref={titleInputRef} className="form-control" id="title" onChange={handleInputChange} value={formData.title} />
