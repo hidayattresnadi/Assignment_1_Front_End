@@ -17,3 +17,4 @@ export function successSwal(message) {
         title: message
     })
 }
+

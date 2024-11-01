@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 
-const Form = ({ addBook, updateBook, editingBook, categories }) => {
+const Form = ({ addBook, updateBook, editingBook, categories, isFormOpen, setIsFormOpen }) => {
     const titleInputRef = useRef(null);
     const [formData, setFormData] = useState({
         id: '',
@@ -32,10 +32,13 @@ const Form = ({ addBook, updateBook, editingBook, categories }) => {
                 isbn: ''
             });
         }
-        if (titleInputRef.current) {
+    }, [editingBook]);
+
+    useEffect(() => {
+        if (isFormOpen && titleInputRef.current) {
             titleInputRef.current.focus();
         }
-    }, [editingBook]);
+    }, [isFormOpen]); 
 
     const handleInputChange = (e) => {
         const { id, value } = e.target;
@@ -63,7 +66,13 @@ const Form = ({ addBook, updateBook, editingBook, categories }) => {
             publicationYear: '',
             isbn: ''
         });
+        setIsFormOpen(false);
     };
+
+    const openForm = () => {
+        setIsFormOpen(true);
+    };
+
     return (
         <div className="min-vh-100 d-flex flex-column align-items-center" style={{ marginTop: '80px' }}>
             <div className="card" style={{ width: "90%", maxWidth: "600px" }}>
@@ -102,7 +111,7 @@ const Form = ({ addBook, updateBook, editingBook, categories }) => {
                                 </option>
                             ))}
                         </select>
-                        <button type="submit" className="btn btn-primary mt-3 w-100">Submit</button>
+                        <button onClick={openForm} type="submit" className="btn btn-primary mt-3 w-100">Submit</button>
                     </form>
                 </div>
             </div>
